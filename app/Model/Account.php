@@ -1,11 +1,16 @@
 <?php
+/*
+ * Copyright (c) 2023 to eIcesoft.
+ * Git: github.com/eicesoft/charge
+ * Author: kelezyb
+ * Mail: eicesoft@gmail.com
+ */
 
 declare (strict_types=1);
 
 namespace App\Model;
 
 use Carbon\Carbon;
-use Hyperf\DbConnection\Model\Model;
 
 /**
  * @property int $id
@@ -35,5 +40,15 @@ class Account extends Model
      *
      * @var array
      */
-    protected array $casts = ['id' => 'integer', 'user_id' => 'integer', 'type' => 'integer', 'is_delete' => 'integer', 'updated_at' => 'datetime', 'created_at' => 'datetime'];
+    protected array $casts = [
+        'id' => 'integer',
+        'user_id' => 'integer',
+        'type' => 'integer',
+        'is_delete' => 'integer',
+    ];
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_delete', 0);
+    }
 }

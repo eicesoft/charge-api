@@ -10,7 +10,12 @@ namespace App\Service;
 
 use App\Exception\BusinessException;
 use Hyperf\Di\Annotation\Inject;
+use Hyperf\Logger\LoggerFactory;
 use Hyperf\Redis\Redis;
+use Hyperf\Utils\ApplicationContext;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
+use Psr\Log\LoggerInterface;
 use RedisException;
 
 /**
@@ -18,15 +23,25 @@ use RedisException;
  */
 abstract class AbstractService
 {
+    /**
+     * @var LoggerInterface
+     */
+    protected LoggerInterface $logger;
+
+    /**
+     * @var Redis
+     */
     #[Inject]
     protected Redis $redis;
 
     /**
      * @throws RedisException
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
      */
     public function __construct()
     {
-        $this->redis->setOption(\Redis::OPT_SERIALIZER, \Redis::SERIALIZER_JSON);
+        $this->logger = ApplicationContext::getContainer()->get(LoggerFactory::class)->get();
     }
 
     /**

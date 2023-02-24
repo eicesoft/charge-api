@@ -77,6 +77,8 @@ class AccountItemService extends AbstractService
         $account_item->type = $type;
         $account_item->account_id = $account->id;
         $account_item->user_id = $account->user_id;
+        $account_item->created_at = time();
+        $account_item->updated_at = time();
 
         $account_item->save();
 

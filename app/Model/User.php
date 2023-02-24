@@ -1,11 +1,16 @@
 <?php
+/*
+ * Copyright (c) 2023 to eIcesoft.
+ * Git: github.com/eicesoft/charge
+ * Author: kelezyb
+ * Mail: eicesoft@gmail.com
+ */
 
 declare (strict_types=1);
 
 namespace App\Model;
 
 use Carbon\Carbon;
-use Hyperf\DbConnection\Model\Model;
 
 /**
  * @property int $id
@@ -32,7 +37,7 @@ class User extends Model
     protected array $fillable = [];
 
     protected array $hidden = ['password'];
-    
+
     /**
      * The attributes that should be cast to native types.
      *

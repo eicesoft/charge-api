@@ -8,6 +8,7 @@
 
 namespace App\Service;
 
+use App\Constants\ErrorCode;
 use App\Model\Account;
 use App\Model\Model;
 use App\Model\User;
@@ -32,6 +33,8 @@ class AccountService extends AbstractService
         $account->user_id = $user->id;
         $account->type = 0;
         $account->is_delete = Model::NONE_DELETE;
+        $account->created_at = time();
+        $account->updated_at = time();
 
         $account->save();
 
@@ -39,5 +42,35 @@ class AccountService extends AbstractService
         $user->save();
 
         return $account;
+    }
+
+    /**
+     * 获得用户的全部账本
+     * @param int $user_id
+     * @return array
+     */
+    public function all(int $user_id): array
+    {
+        return Account::query()
+            ->where('user_id', $user_id)
+            ->get()
+            ->toArray();
+    }
+
+    /**
+     * 获得用户当前账本
+     * @param array $user
+     * @return array
+     */
+    public function default(array $user): array
+    {
+        $account = Account::query()
+            ->find($user['default_account_id']);
+
+        if ($account) {
+            return $account->toArray();
+        } else {
+            $this->throwApiException(ErrorCode::DEFAULT_ACCOUNT_ERROR);
+        }
     }
 }

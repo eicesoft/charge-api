@@ -34,6 +34,8 @@ class UserService extends AbstractService
         $user = new User();
         $user->username = $username;
         $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->created_at = time();
+        $user->updated_at = time();
 
         $user->save();
 
@@ -55,6 +57,7 @@ class UserService extends AbstractService
         $user = User::query()->where('username', $username)->first();
 
         if ($user) {
+            $this->logger->info("用户登录, 账户: $username, 密码: $password");
             if (!password_verify($password, $user->password)) {
                 $this->throwApiException(ErrorCode::AUTH_PASSWORD_ERROR);
             }

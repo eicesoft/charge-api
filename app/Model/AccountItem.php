@@ -1,10 +1,16 @@
 <?php
+/*
+ * Copyright (c) 2023 to eIcesoft.
+ * Git: github.com/eicesoft/charge
+ * Author: kelezyb
+ * Mail: eicesoft@gmail.com
+ */
 
 declare(strict_types=1);
 
 namespace App\Model;
 
-use Hyperf\DbConnection\Model\Model;
+use Carbon\Carbon;
 
 /**
  * @property int $id
@@ -12,8 +18,8 @@ use Hyperf\DbConnection\Model\Model;
  * @property int $type
  * @property int $account_id
  * @property int $user_id
- * @property \Carbon\Carbon $updated_at
- * @property \Carbon\Carbon $created_at
+ * @property Carbon $updated_at
+ * @property Carbon $created_at
  */
 class AccountItem extends Model
 {

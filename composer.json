@@ -26,6 +26,7 @@
     "hyperf/http-server": "~v3.0.0",
     "hyperf/logger": "~v3.0.0",
     "hyperf/memory": "~v3.0.0",
+    "hyperf/paginator": "^v3.0.0",
     "hyperf/process": "~v3.0.0",
     "hyperf/redis": "~v3.0.0",
     "hyperf/validation": "~v3.0.0",

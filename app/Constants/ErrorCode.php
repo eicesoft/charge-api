@@ -31,9 +31,13 @@ class ErrorCode extends AbstractConstants
 
 
     /**
-     * @Message("身份验证失败")
+     * @Message("Token未设置")
      */
     public const AUTH_EMPTY = 501;
+    /**
+     * @Message("Token错误")
+     */
+    public const AUTH_USER_EMPTY = 501;
 
     /**
      * @Message("用户名已存在.")
@@ -45,4 +49,9 @@ class ErrorCode extends AbstractConstants
      */
     public const AUTH_USERNAME_NOT_EXISTS = 302;
     public const AUTH_PASSWORD_ERROR = 303;
+
+    /**
+     * @Message("默认账本丢失, 请联系管理员修复.")
+     */
+    public const DEFAULT_ACCOUNT_ERROR = 310;
 }
