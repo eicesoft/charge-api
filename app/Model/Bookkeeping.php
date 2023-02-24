@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Model;
 
 
-use Core\Model\Order\OrderItem;
 use Hyperf\Database\Model\Relations\HasOne;
 
 /**
@@ -15,6 +14,7 @@ use Hyperf\Database\Model\Relations\HasOne;
  * @property int $account_item_id
  * @property int $account_id
  * @property int $user_id
+ * @property int $property_id
  * @property string $date
  * @property int $updated_at
  * @property int $created_at
