@@ -29,8 +29,20 @@ class ErrorCode extends AbstractConstants
      */
     public const SERVER_ERROR = 500;
 
+
     /**
-     * @Message("用户名已存在！")
+     * @Message("身份验证失败")
+     */
+    public const AUTH_EMPTY = 501;
+
+    /**
+     * @Message("用户名已存在.")
      */
     public const REGISTRY_USER_EXISTS = 301;
+
+    /**
+     * @Message("用户名不存在.")
+     */
+    public const AUTH_USERNAME_NOT_EXISTS = 302;
+    public const AUTH_PASSWORD_ERROR = 303;
 }

@@ -10,13 +10,17 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use App\Middleware\AuthMiddleware;
+use App\Util\UserUtil;
 use Hyperf\HttpServer\Annotation\Controller;
 use Hyperf\HttpServer\Annotation\GetMapping;
+use Hyperf\HttpServer\Annotation\Middleware;
 
 #[Controller(prefix: "index")]
 class IndexController extends AbstractController
 {
     #[GetMapping(path: "index")]
+    #[Middleware(AuthMiddleware::class)]
     public function index(): array
     {
         $user = $this->request->input('user', 'Hyperf');
@@ -24,6 +28,7 @@ class IndexController extends AbstractController
 
         return $this->success([
             'method' => $method,
+            'user' => UserUtil::user(),
             'message' => "Hello {$user}.",
         ]);
     }
