@@ -10,6 +10,7 @@ namespace App\Service;
 
 use App\Constants\ErrorCode;
 use App\Model\Account;
+use App\Model\AccountItem;
 use App\Model\Model;
 use App\Model\User;
 
@@ -72,5 +73,40 @@ class AccountService extends AbstractService
         } else {
             $this->throwApiException(ErrorCode::DEFAULT_ACCOUNT_ERROR);
         }
+    }
+
+    /**
+     * @param int $account_id
+     * @return Account
+     */
+    public function get(int $account_id): Account
+    {
+        /** @var Account $account */
+        $account = Account::query()->find($account_id);
+
+        if ($account) {
+            return $account;
+        } else {
+            $this->throwApiException(ErrorCode::ACCOUNT_ID_ERROR);
+        }
+    }
+
+    /**
+     * @param array|null $user
+     * @param int $account_id
+     * @return array
+     */
+    public function items(?array $user, int $account_id = 0): array
+    {
+        if ($account_id == 0) {
+            $account_id = $user['default_account_id'];
+        }
+
+        $account_items = AccountItem::query()
+            ->where('user_id', $user['id'])
+            ->where('account_id', $account_id)
+            ->get();
+
+        return $account_items->toArray();
     }
 }

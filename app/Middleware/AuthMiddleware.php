@@ -11,7 +11,7 @@ declare(strict_types=1);
 namespace App\Middleware;
 
 use App\Constants\ErrorCode;
-use App\Exception\BusinessException;
+use App\Exception\TokenException;
 use App\Util\UserUtil;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Logger\LoggerFactory;
@@ -55,14 +55,14 @@ class AuthMiddleware implements MiddlewareInterface
         $authorization = $request->getHeaderLine(self::AUTHORIZATION);
 
         if (!$authorization) {
-            throw new BusinessException(ErrorCode::AUTH_EMPTY);
+            throw new TokenException(ErrorCode::AUTH_EMPTY);
         }
 
         $user = UserUtil::getLoginInfo($authorization);
         $this->logger->info($authorization);
 //        $this->logger->info($user);
         if (!$user) {
-            throw new BusinessException(ErrorCode::AUTH_USER_EMPTY);
+            throw new TokenException(ErrorCode::AUTH_USER_EMPTY);
         }
 
         UserUtil::setUser($user);

@@ -10,13 +10,9 @@ namespace App\Controller\Request;
 
 use Hyperf\Validation\Request\FormRequest;
 
-class PageRequest extends FormRequest
+class AccountItemRequest extends FormRequest
 {
-    public const DEFAULT_PAGE = 1;
-    public const DEFAULT_PAGE_SIZE = 10;
-
-    public const FIELD_PAGE = 'page';
-    public const FIELD_PAGE_SIZE = 'page_size';
+    const FIELD_ACCOUNT_ID = 'account_id';
 
     public function authorize(): bool
     {
@@ -26,16 +22,14 @@ class PageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            self::FIELD_PAGE => 'integer',
-            self::FIELD_PAGE_SIZE => 'integer',
+            self::FIELD_ACCOUNT_ID => 'integer',
         ];
     }
 
     public function attributes(): array
     {
         return [
-            self::FIELD_PAGE => '页码',
-            self::FIELD_PAGE_SIZE => '每页数量',
+            self::FIELD_ACCOUNT_ID => '账本编号',
         ];
     }
 }

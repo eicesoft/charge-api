@@ -8,6 +8,7 @@
 
 namespace App\Service;
 
+use App\Constants\ErrorCode;
 use App\Model\Account;
 use App\Model\AccountItem;
 
@@ -70,8 +71,16 @@ class AccountItemService extends AbstractService
      * @param int $type
      * @return AccountItem
      */
-    private function createAccountItem(Account $account, string $title, int $type): AccountItem
+    public function createAccountItem(Account $account, string $title, int $type): AccountItem
     {
+        $count = AccountItem::query()
+            ->where('account_id', $account->id)
+            ->where('title', $title)->count();
+        
+        if ($count) {
+            $this->throwApiException(ErrorCode::ACCOUNT_ITEM_TITLE_EXIST);
+        }
+
         $account_item = new AccountItem();
         $account_item->title = $title;
         $account_item->type = $type;

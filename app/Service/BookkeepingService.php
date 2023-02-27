@@ -47,6 +47,7 @@ class BookkeepingService extends AbstractService
     }
 
     /**
+     * 获取每日记账列表
      * @param string|null $mouth
      * @param int $account_id
      * @param int $page
@@ -74,6 +75,10 @@ class BookkeepingService extends AbstractService
             ->orderByDesc('created_at')
             ->paginate($page_size, ['*'], 'page', $page);
 
-        return $paginate;
+        $this->logger->info(json_encode($paginate));
+        return $this->toPage($paginate, function ($items) use ($paginate) {
+//            return collect($paginate->items())->groupBy('day');
+            return $items;
+        });
     }
 }

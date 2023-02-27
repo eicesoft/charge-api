@@ -18,6 +18,7 @@ declare(strict_types=1);
 
 namespace App\Exception\Handler;
 
+use App\Exception\TokenException;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Stream\SwooleStream;
@@ -40,8 +41,14 @@ class AppExceptionHandler extends ExceptionHandler
             'message' => $throwable->getMessage(),
             'data' => env('APP_ENV', 'prod') == 'prod' ? [] : $throwable->getTrace(),
         ];
+
+        $http_code = 200;
+        if ($throwable instanceof TokenException) {
+            $http_code = 401;   //Token类错误
+        }
+
         return $response->withHeader('Server', env('SERVER_NAME', 'HttpServer'))
-            ->withStatus(500)
+            ->withStatus($http_code)
             ->withBody(new SwooleStream(json_encode($error)));
     }
 

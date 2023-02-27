@@ -9,6 +9,7 @@
 namespace App\Service;
 
 use App\Exception\BusinessException;
+use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Di\Annotation\Inject;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Redis\Redis;
@@ -52,5 +53,23 @@ abstract class AbstractService
     public function throwApiException(int $code): void
     {
         throw new BusinessException($code);
+    }
+
+    /**
+     * @param LengthAwarePaginatorInterface $paginate
+     * @param callable $func
+     * @return array
+     */
+    protected function toPage(LengthAwarePaginatorInterface $paginate, callable $func): array
+    {
+        $item = $func($paginate->items());
+        return [
+            'list' => $item,
+            'per_page' => $paginate->perPage(),
+            'current' => $paginate->currentPage(),
+            'total' => $paginate->total(),
+            'last_page' => $paginate->lastPage(),
+            'has_page' => $paginate->hasMorePages(),
+        ];
     }
 }

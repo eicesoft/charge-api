@@ -31,6 +31,8 @@ class Bookkeeping extends Model
      */
     protected array $fillable = [];
 
+    protected array $appends = ['day'];
+
     public function account_item(): HasOne
     {
         return $this->hasOne(AccountItem::class, 'id', 'account_item_id');
@@ -39,6 +41,11 @@ class Bookkeeping extends Model
     public function account(): HasOne
     {
         return $this->hasOne(Account::class, 'id', 'account_id');
+    }
+
+    public function getDayAttribute($prop)
+    {
+        return date('Y-m-d', $this->created_at);
     }
 
     /**

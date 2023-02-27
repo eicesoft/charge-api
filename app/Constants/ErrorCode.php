@@ -29,7 +29,6 @@ class ErrorCode extends AbstractConstants
      */
     public const SERVER_ERROR = 500;
 
-
     /**
      * @Message("Token未设置")
      */
@@ -48,10 +47,24 @@ class ErrorCode extends AbstractConstants
      * @Message("用户名不存在.")
      */
     public const AUTH_USERNAME_NOT_EXISTS = 302;
+
+    /**
+     * @Message("密码错误.")
+     */
     public const AUTH_PASSWORD_ERROR = 303;
 
     /**
      * @Message("默认账本丢失, 请联系管理员修复.")
      */
     public const DEFAULT_ACCOUNT_ERROR = 310;
+
+    /**
+     * @Message("账本ID错误.")
+     */
+    public const ACCOUNT_ID_ERROR = 311;
+
+    /**
+     * @Message("账本分类标题已存在.")
+     */
+    public const ACCOUNT_ITEM_TITLE_EXIST = 312;
 }
