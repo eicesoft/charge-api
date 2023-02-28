@@ -58,18 +58,19 @@ abstract class AbstractService
     /**
      * @param LengthAwarePaginatorInterface $paginate
      * @param callable $func
+     * @param array $extend
      * @return array
      */
-    protected function toPage(LengthAwarePaginatorInterface $paginate, callable $func): array
+    protected function toPage(LengthAwarePaginatorInterface $paginate, callable $func, $extend = []): array
     {
         $item = $func($paginate->items());
-        return [
+        return array_merge([
             'list' => $item,
             'per_page' => $paginate->perPage(),
             'current' => $paginate->currentPage(),
             'total' => $paginate->total(),
             'last_page' => $paginate->lastPage(),
             'has_page' => $paginate->hasMorePages(),
-        ];
+        ], $extend);
     }
 }

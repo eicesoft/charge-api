@@ -43,7 +43,7 @@ class Bookkeeping extends Model
         return $this->hasOne(Account::class, 'id', 'account_id');
     }
 
-    public function getDayAttribute($prop)
+    public function getDayAttribute($prop): string
     {
         return date('Y-m-d', $this->created_at);
     }

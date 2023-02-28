@@ -10,6 +10,7 @@ namespace App\Controller;
 
 use App\Controller\Request\AddBookkeeping;
 use App\Controller\Request\BookkeepingList;
+use App\Controller\Request\BookkeepingStatistics;
 use App\Middleware\AuthMiddleware;
 use App\Service\BookkeepingService;
 use Hyperf\Di\Annotation\Inject;
@@ -58,5 +59,16 @@ class BookkeepingController extends AbstractController
         $bookkeeping_list = $this->bookkeepingService->list($mouth, $account_id, $page, $page_size);
 
         return $this->success($bookkeeping_list);
+    }
+
+    #[GetMapping(path: "statistics")]
+    public function statistics(BookkeepingStatistics $request): array
+    {
+        $type = intval($request->input($request::FIELD_TYPE));
+        $mode = intval($request->input($request::FIELD_MODE));
+        $account_id = $request->input($request::FIELD_ACCOUNT_ID, 0);
+        $statistics = $this->bookkeepingService->statistics($type, $mode, $account_id);
+
+        return $this->success($statistics);
     }
 }
