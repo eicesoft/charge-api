@@ -17,6 +17,10 @@ use App\Model\AccountItem;
  */
 class AccountItemService extends AbstractService
 {
+    public const ACCOUNT_ITEM_TYPES = [
+        self::ACCOUNT_ITEM_TYPE_EXPEND,
+        self::ACCOUNT_ITEM_TYPE_INCOME
+    ];
     /** @var int 支出 */
     public const ACCOUNT_ITEM_TYPE_EXPEND = 1;
     /** @var int 收入 */
@@ -76,7 +80,7 @@ class AccountItemService extends AbstractService
         $count = AccountItem::query()
             ->where('account_id', $account->id)
             ->where('title', $title)->count();
-        
+
         if ($count) {
             $this->throwApiException(ErrorCode::ACCOUNT_ITEM_TITLE_EXIST);
         }

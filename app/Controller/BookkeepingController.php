@@ -9,6 +9,7 @@
 namespace App\Controller;
 
 use App\Controller\Request\AddBookkeeping;
+use App\Controller\Request\BookkeepingBill;
 use App\Controller\Request\BookkeepingList;
 use App\Controller\Request\BookkeepingStatistics;
 use App\Middleware\AuthMiddleware;
@@ -52,7 +53,7 @@ class BookkeepingController extends AbstractController
     public function list(BookkeepingList $request): array
     {
         $mouth = $request->input($request::FIELD_MOUTH);
-        $account_id = $request->input($request::FIELD_ACCOUNT_ID, 0);
+        $account_id = intval($request->input($request::FIELD_ACCOUNT_ID, 0));
         $page = $request->input($request::FIELD_PAGE, $request::DEFAULT_PAGE);
         $page_size = $request->input($request::FIELD_PAGE_SIZE, $request::DEFAULT_PAGE_SIZE);
 
@@ -61,14 +62,34 @@ class BookkeepingController extends AbstractController
         return $this->success($bookkeeping_list);
     }
 
+    /**
+     * 获得数据统计
+     * @param BookkeepingStatistics $request
+     * @return array
+     */
     #[GetMapping(path: "statistics")]
     public function statistics(BookkeepingStatistics $request): array
     {
         $type = intval($request->input($request::FIELD_TYPE));
         $mode = intval($request->input($request::FIELD_MODE));
-        $account_id = $request->input($request::FIELD_ACCOUNT_ID, 0);
+        $account_id = intval($request->input($request::FIELD_ACCOUNT_ID, 0));
         $statistics = $this->bookkeepingService->statistics($type, $mode, $account_id);
 
         return $this->success($statistics);
+    }
+
+    /**
+     * 获得年度账单
+     * @param BookkeepingBill $request
+     * @return array
+     */
+    #[GetMapping(path: "bill")]
+    public function bill(BookkeepingBill $request): array
+    {
+        $year = $request->input($request::FIELD_YEAR);
+        $account_id = intval($request->input($request::FIELD_ACCOUNT_ID, 0));
+        $bills = $this->bookkeepingService->bill($year, $account_id);
+
+        return $this->success($bills);
     }
 }

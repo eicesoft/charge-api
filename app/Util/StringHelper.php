@@ -23,4 +23,14 @@ class StringHelper
             . substr($chars, 16, 4) . '-'
             . substr($chars, 20, 12);
     }
+
+    /**
+     *
+     * @param mixed $number
+     * @return string
+     */
+    public static function formatNumber(mixed $number): string
+    {
+        return number_format($number, 2, '.', '');
+    }
 }

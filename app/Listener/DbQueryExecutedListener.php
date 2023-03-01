@@ -33,7 +33,7 @@ class DbQueryExecutedListener implements ListenerInterface
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private LoggerInterface $logger;
 
     public function __construct(ContainerInterface $container)
     {

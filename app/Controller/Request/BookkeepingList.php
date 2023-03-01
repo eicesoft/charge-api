@@ -30,7 +30,7 @@ class BookkeepingList extends PageRequest
         $rules = parent::attributes();
         return array([
             self::FIELD_MOUTH => '记账月份',
-            self::FIELD_ACCOUNT_ID => 'integer',
+            self::FIELD_ACCOUNT_ID => '账本 ID',
         ], $rules);
     }
 }

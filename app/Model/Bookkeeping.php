@@ -16,6 +16,8 @@ use Hyperf\Database\Model\Relations\HasOne;
  * @property int $user_id
  * @property int $property_id
  * @property string $date
+ * @property string $year
+ * @property string $month
  * @property int $updated_at
  * @property int $created_at
  */

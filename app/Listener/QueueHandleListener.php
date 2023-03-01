@@ -50,30 +50,37 @@ class QueueHandleListener implements ListenerInterface
         ];
     }
 
+    /**
+     * @param object $event
+     * @return void
+     */
     public function process(object $event): void
     {
-        if ($event instanceof Event && $event->message->job()) {
-            $job = $event->message->job();
-            $jobClass = get_class($job);
-            if ($job instanceof AnnotationJob) {
-                $jobClass = sprintf('Job[%s@%s]', $job->class, $job->method);
-            }
-            $date = date('Y-m-d H:i:s');
+        if ($event instanceof Event) {
+            if ($event->getMessage()->job()) {
+                $job = $event->getMessage()->job();
+                if ($job instanceof AnnotationJob) {
+                    $jobClass = sprintf('Job[%s@%s]', $job->class, $job->method);
+                } else {
+                    $jobClass = get_class($job);
+                }
+                $date = date('Y-m-d H:i:s');
 
-            switch (true) {
-                case $event instanceof BeforeHandle:
-                    $this->logger->info(sprintf('[%s] Processing %s.', $date, $jobClass));
-                    break;
-                case $event instanceof AfterHandle:
-                    $this->logger->info(sprintf('[%s] Processed %s.', $date, $jobClass));
-                    break;
-                case $event instanceof FailedHandle:
-                    $this->logger->error(sprintf('[%s] Failed %s.', $date, $jobClass));
-                    $this->logger->error($this->formatter->format($event->getThrowable()));
-                    break;
-                case $event instanceof RetryHandle:
-                    $this->logger->warning(sprintf('[%s] Retried %s.', $date, $jobClass));
-                    break;
+                switch (true) {
+                    case $event instanceof BeforeHandle:
+                        $this->logger->info(sprintf('[%s] Processing %s.', $date, $jobClass));
+                        break;
+                    case $event instanceof AfterHandle:
+                        $this->logger->info(sprintf('[%s] Processed %s.', $date, $jobClass));
+                        break;
+                    case $event instanceof FailedHandle:
+                        $this->logger->error(sprintf('[%s] Failed %s.', $date, $jobClass));
+                        $this->logger->error($this->formatter->format($event->getThrowable()));
+                        break;
+                    case $event instanceof RetryHandle:
+                        $this->logger->warning(sprintf('[%s] Retried %s.', $date, $jobClass));
+                        break;
+                }
             }
         }
     }

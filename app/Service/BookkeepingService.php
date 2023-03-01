@@ -9,6 +9,7 @@
 namespace App\Service;
 
 use App\Model\Bookkeeping;
+use App\Util\StringHelper;
 use App\Util\UserUtil;
 
 class BookkeepingService extends AbstractService
@@ -38,6 +39,8 @@ class BookkeepingService extends AbstractService
         $bookkeeping->account_id = $account_id;
         $bookkeeping->user_id = $user['id'];
         $bookkeeping->date = date('Y-m');
+        $bookkeeping->year = date('Y');
+        $bookkeeping->month = date('m');
         $bookkeeping->created_at = $now;
         $bookkeeping->updated_at = $now;
 
@@ -140,7 +143,8 @@ class BookkeepingService extends AbstractService
         });
 
         $groups->each(function ($item) use ($total) {
-            $item->rate = floatval(number_format(floatval($item->money) / $total * 100, 2));
+            $rate = floatval($item->money) / $total * 100;
+            $item->rate = floatval(StringHelper::formatNumber($rate));
 
             return $item;
         });
@@ -148,6 +152,57 @@ class BookkeepingService extends AbstractService
         return [
             'list' => $groups->toArray(),
             'total' => $total,
+        ];
+    }
+
+    /**
+     * 获得年度账单
+     * @param string $year
+     * @param int $account_id
+     * @return array
+     */
+    public function bill(string $year, int $account_id = 0): array
+    {
+        $user = UserUtil::user();
+
+        if ($account_id == 0) {
+            $account_id = $user['default_account_id'];
+        }
+
+        $bills = Bookkeeping::query()
+            ->selectRaw("date,month,account_item.type as type, sum(money) as money")
+            ->leftJoin('account_item', 'account_item.id', '=', 'bookkeeping.account_item_id')
+            ->where('bookkeeping.year', $year)
+            ->where('bookkeeping.account_id', $account_id)
+            ->groupBy(['date', 'account_item.type'])
+            ->orderByDesc('month')
+            ->get()
+            ->makeHidden(['day'])
+            ->groupBy('month');
+
+        $result = [];
+        $total_expend = $total_income = 0;
+        foreach ($bills as $month => $bill) {
+            $s = collect($bill)->pluck('money', 'type')->toArray();
+            foreach (AccountItemService::ACCOUNT_ITEM_TYPES as $type) {
+                if (!isset($s[$type])) {
+                    $s[$type] = "0.00";
+                }
+            }
+            $surplus = $s[AccountItemService::ACCOUNT_ITEM_TYPE_INCOME] - $s[AccountItemService::ACCOUNT_ITEM_TYPE_EXPEND];
+            $s['surplus'] = StringHelper::formatNumber($surplus);
+            $total_income += floatval($s[AccountItemService::ACCOUNT_ITEM_TYPE_INCOME]);
+            $total_expend += floatval($s[AccountItemService::ACCOUNT_ITEM_TYPE_EXPEND]);
+            $result[$month] = $s;
+        }
+
+        return [
+            'list' => $result,
+            'total' => [
+                AccountItemService::ACCOUNT_ITEM_TYPE_INCOME => StringHelper::formatNumber($total_income),
+                AccountItemService::ACCOUNT_ITEM_TYPE_EXPEND => StringHelper::formatNumber($total_expend),
+                'surplus' => StringHelper::formatNumber(floatval($total_income - $total_expend)),
+            ]
         ];
     }
 }
